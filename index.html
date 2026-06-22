@@ -67,7 +67,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="p-8 rounded-2xl bg-slate-800/50 border border-slate-800 hover:border-slate-700 transition">
                     <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center mb-6 text-xl">📡</div>
-                    <h3 class="text-xl font-medium mb-3 text-white">Radares de Presencia Coaxial</h3>
+                    <h3 class="text-xl font-medium mb-3 text-white">Radares de Presencia</h3>
                     <p class="text-slate-400 font-light text-sm leading-relaxed">Sensores de alta precisión que escanean el espacio de forma vectorial sin capturar imágenes. Identifican anomalías o tiempos de espera excesivos en el baño resguardando la dignidad.</p>
                 </div>
                 <div class="p-8 rounded-2xl bg-slate-800/50 border border-slate-800 hover:border-slate-700 transition">
@@ -126,13 +126,13 @@
     </section>
 
     <section id="contacto" class="py-24 bg-slate-50 px-6 border-t border-slate-100">
-        <div class="max-w-2xl mx-auto bg-white p-8 sm:p-12 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
-            <div class="text-center mb-8">
-                <h2 class="font-serif text-3xl text-slate-900 tracking-tight mb-2">Iniciar una Evaluación</h2>
-                <p class="text-slate-500 text-sm font-light">Déjenos sus datos. Un especialista se contactará de manera exclusiva y confidencial.</p>
-            </div>
+        <div class="max-w-2xl mx-auto bg-white p-8 sm:p-12 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden min-h-[400px] flex flex-col justify-center">
             
-            <form action="https://formspree.io/f/mvzjoldn" method="POST" class="space-y-6">
+            <form id="contact-form" action="https://formspree.io/f/mvzjoldn" method="POST" class="space-y-6 transition-all duration-300">
+                <div class="text-center mb-8">
+                    <h2 class="font-serif text-3xl text-slate-900 tracking-tight mb-2">Iniciar una Evaluación</h2>
+                    <p class="text-slate-500 text-sm font-light">Déjenos sus datos. Un especialista se contactará de manera exclusiva y confidencial.</p>
+                </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">Nombre Completo</label>
                     <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-slate-900 transition text-slate-800 text-sm bg-slate-50/50">
@@ -149,19 +149,29 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">¿Cómo podemos ayudarle?</label>
-                        <select name="type" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-slate-900 transition text-slate-800 text-sm bg-slate-50/50">
-                            <option value="b2c">Busco protección privada para un familiar (Hijo / Cuidador)</option>
-                            <option value="b2b">Represento a una Institución (Residencia / Senior Suites / Clínica)</option>
-                        </select>
+                    <select name="type" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-slate-900 transition text-slate-800 text-sm bg-slate-50/50">
+                        <option value="b2c">Busco protección privada para un familiar (Hijo / Cuidador)</option>
+                        <option value="b2b">Represento a una Institución (Residencia / Senior Suites / Clínica)</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">Mensaje / Requerimientos específicos</label>
                     <textarea name="message" rows="4" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-slate-900 transition text-slate-800 text-sm bg-slate-50/50"></textarea>
                 </div>
-                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-4 rounded-xl transition shadow-md">
-                    Enviar Solicitud de Contacto
+                <button type="submit" id="submit-btn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-4 rounded-xl transition shadow-md flex items-center justify-center">
+                    <span id="btn-text">Enviar Solicitud de Contacto</span>
                 </button>
             </form>
+
+            <div id="success-message" class="hidden text-center space-y-4 py-12 transition-all duration-500 opacity-0 transform translate-y-4">
+                <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto text-3xl border border-amber-200/50 shadow-inner">
+                    ✓
+                </div>
+                <h3 class="font-serif text-2xl text-slate-900 tracking-tight">Solicitud Recibida Correctamente</h3>
+                <p class="text-slate-500 text-sm font-light max-w-md mx-auto leading-relaxed">
+                    Agradecemos su interés en <strong class="text-slate-800 font-medium">Senior Sentinel</strong>. Un asesor técnico especializado revisará sus requerimientos y se comunicará de manera estrictamente confidencial dentro de las próximas 24 horas hábiles.
+                </p>
+            </div>
         </div>
     </section>
 
@@ -171,6 +181,62 @@
             <p class="tracking-wide">Concepción, Chile &middot; Inteligencia Ambiental Pasiva</p>
         </div>
     </footer>
+
+    <script>
+        const form = document.getElementById('contact-form');
+        const successMessage = document.getElementById('success-message');
+        const submitBtn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault(); // Evita que la página recargue o redirija
+            
+            // Estado de carga visual refinado
+            submitBtn.disabled = true;
+            btnText.textContent = "Procesando de forma segura...";
+            submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            // Recolectar datos del formulario de manera nativa
+            const formData = new FormData(form);
+
+            try {
+                // Envío en segundo plano vía POST asíncrono
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    // Ocultar formulario con animación sutil
+                    form.classList.add('opacity-0', 'pointer-events-none');
+                    setTimeout(() => {
+                        form.classList.add('hidden');
+                        
+                        // Mostrar mensaje de éxito corporativo
+                        successMessage.classList.remove('hidden');
+                        setTimeout(() => {
+                            successMessage.classList.remove('opacity-0', 'translate-y-4');
+                        }, 50);
+                    }, 300);
+                } else {
+                    alert('Ocurrió un inconveniente al procesar la solicitud. Por favor, intente nuevamente o escríbanos directamente.');
+                    resetButton();
+                }
+            } catch (error) {
+                alert('Error de conexión. Verifique su acceso a internet e intente nuevamente.');
+                resetButton();
+            }
+        });
+
+        function resetButton() {
+            submitBtn.disabled = false;
+            btnText.textContent = "Enviar Solicitud de Contacto";
+            submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+        }
+    </script>
 
 </body>
 </html>
